@@ -28,9 +28,8 @@ dir2/
 """
 
 import sys
-import configparser
 import re
-import os
+import argparse
 from osCommand.oscommand import (
     _createFileInDir,
     _makeDir
@@ -48,34 +47,43 @@ PATTERNSFILE = CONFSAMFPATTERNS["Patterns"]["filePat"]
 class PBReader:
     def __init__(self):
 
-        self.pbfile = sys.argv[1]
+        self.parser = argparse.ArgumentParser(description="Process the .pb file")
+        self.filename = sys.argv[1]
+        # The argument for the pb file
+        self.parser.add_argument("file", type=str, help=f"Processing {self.filename}")
+        # The argument for version
+        self.parser.add_argument("--version", type=str, help="The projectbuild version")
 
-        if len(sys.argv) < 2:
-            raise TypeError("You didn't pass the file name")
-        
-        if not self.pbfile.endswith(".pb"):
+        # The create argument, to create the file
+        self.parser.add_argument("--create", action="store_true",  help="Create the project structure")
+
+
+        self.args = self.parser.parse_args()
+
+        if not self.args.file.endswith(".pb"):
             raise TypeError("This isn't a .pb file")
+        
+        if self.args.create:
+            self.__create()
 
         
-                    
 
     
-    def create(self):
+    def __create(self):
         
-        with open(self.pbfile, "r") as file:
+        with open(self.args.file, "r") as file:
             content = file.read().strip().split("\n")
-        if self.pbfile.endswith(".pb"):
-            for text in content:
-                if re.match(PATTERNSDIR, text):
-                    _makeDir(text)
-                    
-                if re.match(PATTERNSFILE, text):
-                    _createFileInDir(text)
-        else:
-            pass
+
+        for text in content:
+            if re.match(PATTERNSDIR, text):
+                _makeDir(text)
+                
+            if re.match(PATTERNSFILE, text):
+                _createFileInDir(text)
+
+
+            
     
-# Structure project ['<dir1>', '', '-dir1-file.py', '-dir1-file1.py', '', '<dir2>', '', '-dir2-file.py']
-# Files ['', 'OutroDir', 'file.py']
+
 if __name__=="__main__":
     pbread = PBReader()
-    pbread.create()

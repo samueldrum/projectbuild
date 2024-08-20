@@ -30,18 +30,21 @@ dir2/
 import sys
 import re
 import argparse
+import os
 from osCommand.oscommand import (
     _createFileInDir,
-    _makeDir
+    _makeDir,
+    _createDirInDir
 )
 from samfile.SamF import SamfReader
 
 CONFIGPATTERNS = SamfReader()
-
-CONFSAMFPATTERNS = CONFIGPATTERNS.read("patterns.samf")
+path_patternsamfile = os.path.relpath(r"patterns.samf")
+CONFSAMFPATTERNS = CONFIGPATTERNS.read(path_patternsamfile)
 
 PATTERNSDIR = CONFSAMFPATTERNS["Patterns"]["dirPat"]
 PATTERNSFILE = CONFSAMFPATTERNS["Patterns"]["filePat"]
+PATTERNDIRINDIR = CONFSAMFPATTERNS["Patterns"]["dirindirPat"]
 
 
 class PBReader:
@@ -53,7 +56,6 @@ class PBReader:
         self.parser.add_argument("file", type=str, help=f"Processing {self.filename}")
         # The argument for version
         self.parser.add_argument("--version", type=str, help="The projectbuild version")
-
         # The create argument, to create the file
         self.parser.add_argument("--create", action="store_true",  help="Create the project structure")
 
@@ -80,10 +82,11 @@ class PBReader:
                 
             if re.match(PATTERNSFILE, text):
                 _createFileInDir(text)
+            
+            if re.match(PATTERNDIRINDIR, text):
+                _createDirInDir(text)
 
 
             
-    
-
 if __name__=="__main__":
     pbread = PBReader()

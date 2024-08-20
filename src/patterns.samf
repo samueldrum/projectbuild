@@ -1,3 +1,4 @@
 <Patterns>
 dirPat = ^<.*>$
 filePat = ^-.*-.*$
+dirindirPat = ^/.*-.*$

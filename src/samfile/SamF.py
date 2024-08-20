@@ -1,15 +1,16 @@
 import re
-
+import os
 class SamfReader:
     """This class is just for put your variable into a samf file"""
 
     def read(self, path):
+        relpath = os.path.relpath(path)
         # Check if the file is .samf
-        if not path.endswith(".samf"):
+        if not relpath.endswith(".samf"):
             raise ValueError("This file is not a 'samf' file")
         
         # Read the file content
-        with open(path, "r") as file:
+        with open(relpath, "r") as file:
             content = file.read().strip().split("\n")
         
         # The first line is the Section

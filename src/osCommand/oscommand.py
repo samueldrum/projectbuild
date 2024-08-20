@@ -18,3 +18,12 @@ def _makeDir(text):
     os.system(f"mkdir {text}")
     print(f"dir {text} was created sucessfully")
 
+def _createDirInDir(text):
+    dirindirlist = text.split("-")
+    dirInDIR = dirindirlist[1]
+    mainDir = os.path.relpath(dirindirlist[0].strip("/"))
+    
+    if not os.path.exists(mainDir):
+        os.makedirs(mainDir)
+    
+    os.makedirs(f"{mainDir}\\{dirInDIR}")

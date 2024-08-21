@@ -18,4 +18,4 @@ If you want to create a file into this directory, you have to do:
 -Dir-yourfilename.ext
 ```
 
-If you do that, and the directory wasn't exists, The pb compile will create the directory automatically
+If you do that, and the directory wasn't exists, The pb interpreter will create the directory automatically
